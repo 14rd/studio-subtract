@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Studio Subtract</title>
+<meta name="description" content="An artist-led studio working in subtraction. We remove everything that isn't essential. What remains is the work." />
+<meta property="og:title" content="Studio Subtract" />
+<meta property="og:description" content="An artist-led studio working in subtraction. We remove everything that isn't essential. What remains is the work." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://14rd.com" />
+<meta name="theme-color" content="#ffffff" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%231d2029'/></svg>" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1d2029;
+    --fg-mid: #49505d;
+    --fg-dim: #8a8f9a;
+    --line: rgba(29,32,41,0.1);
+    --sans: "Neue Haas Grotesk Display", "Neue Haas Grotesk", "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--sans); overflow: hidden; height: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+  *::selection { background: var(--fg); color: var(--bg); }
+  * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cardFloat {
+    from { opacity: 0; transform: translate3d(0, 60px, -200px) scale(0.92); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  }
+  @keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+  .smooth-scroll::-webkit-scrollbar { width: 0; }
+  .smooth-scroll { scrollbar-width: none; }
+
+  button:focus-visible, a:focus-visible { outline: 1px solid var(--fg); outline-offset: 2px; }
+
+  .gallery-card {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script>
+  var PROJECTS = [
+    { id: "01", slug: "chess", title: "Chess", displayTitle: "Chess, 1 of 1", client: "James Jefferys", year: "2026", role: "Art, Creative Direction", discipline: "Art", cover: "assets/covers/CHESS.png", blurb: "A three-year subtractive chess project. Each piece reduced to its essential form through systematic removal. The game made physical through subtraction.", content: [{type:"img",src:"assets/projects/chess/1.jpg"},{type:"img",src:"assets/projects/chess/2.jpg"},{type:"img",src:"assets/projects/chess/3.jpg"},{type:"img",src:"assets/projects/chess/4.jpg"},{type:"img",src:"assets/projects/chess/5.jpg"},{type:"img",src:"assets/projects/chess/6.jpg"},{type:"img",src:"assets/projects/chess/7.jpg"},{type:"img",src:"assets/projects/chess/8.jpg"},{type:"img",src:"assets/projects/chess/9.jpg"}] },
+    { id: "02", slug: "studio-james-jefferys", title: "Single Surface Interface", displayTitle: "Single Surface Interface", client: "Studio James Jefferys", year: "2026", role: "Creative Direction, Web Design", discipline: "Web", cover: "assets/covers/STUDIOJAMESJEFFERYS.png", blurb: "A single-surface website built as one digital skin. The premise: the most intuitive interface is the human body, so interaction is reduced to its essential elements and nothing more. The method is subtraction, used for clarity and control.", content: [] },
+    { id: "03", slug: "lk001", title: "LK001", displayTitle: "LK001", client: "Loho Kur", year: "2026", role: "Creative Direction, CGI", discipline: "CGI", cover: "assets/covers/LK001.png", blurb: "We launched a new collection and direction through cinematic animation built around a single device, a collection code system. One idea, carried across the work, ordering the line down to its essentials.", content: [{type:"video",src:"assets/projects/lk001/1.mp4"},{type:"video",src:"assets/projects/lk001/2.mp4"},{type:"video",src:"assets/projects/lk001/3.mp4"},{type:"video",src:"assets/projects/lk001/4.mp4"},{type:"video",src:"assets/projects/lk001/5.mp4"},{type:"video",src:"assets/projects/lk001/6.mp4"},{type:"video",src:"assets/projects/lk001/7.mp4"}] },
+    { id: "04", slug: "dining-set", title: "Dining Set", displayTitle: "Dining Set", client: "James Jefferys", year: "2026", role: "Art, Design", discipline: "Design", cover: "assets/covers/DININGSET.png", blurb: "A dining set reduced to its structural minimum. Every element exists because it must. The object carries nothing decorative.", content: [{type:"img",src:"assets/projects/dining-set/1.jpg"},{type:"img",src:"assets/projects/dining-set/2.jpg"},{type:"img",src:"assets/projects/dining-set/3.jpg"},{type:"img",src:"assets/projects/dining-set/4.jpg"},{type:"img",src:"assets/projects/dining-set/5.jpg"}] },
+    { id: "05", slug: "erosion", title: "Erosion", displayTitle: "Erosion", client: "Zellerfeld", year: "2025", role: "Creative Direction, Design, CGI", discipline: "CGI", cover: "assets/covers/EROSION.png", blurb: "A sculptural shoe made by subtraction. The form follows geological erosion, where material is taken away until only the load-bearing structure remains. Designed, animated, and produced as a single digital-to-physical object.", content: [{type:"img",src:"assets/projects/erosion/1.jpg"},{type:"img",src:"assets/projects/erosion/2.jpg"},{type:"img",src:"assets/projects/erosion/3.jpg"},{type:"video",src:"assets/projects/erosion/4.mp4"}] },
+    { id: "06", slug: "setting-sun", title: "Setting Sun", displayTitle: "Setting Sun", client: "Hikari no Yami", year: "2025", role: "Creative Direction", discipline: "Direction", cover: "assets/covers/SETTINGSUN.png", blurb: "We directed Chapter 8 through a single refined identity system. One set of rules, applied without deviation, holding continuity across the campaign and sharpening the brand against everything around it.", content: [{type:"img",src:"assets/projects/setting-sun/1.jpg"},{type:"img",src:"assets/projects/setting-sun/2.jpg"},{type:"img",src:"assets/projects/setting-sun/3.jpg"},{type:"img",src:"assets/projects/setting-sun/4.jpg"},{type:"img",src:"assets/projects/setting-sun/5.jpg"},{type:"img",src:"assets/projects/setting-sun/6.jpg"},{type:"img",src:"assets/projects/setting-sun/7.jpg"},{type:"img",src:"assets/projects/setting-sun/8.jpg"}] },
+    { id: "07", slug: "14-red-door", title: "14 Red Door", displayTitle: "14 Red Door", client: "14 Red Door", year: "2025", role: "Creative Direction, Brand Identity", discipline: "Identity", cover: "assets/covers/14REDDOOR.png", blurb: "The complete identity, from name to type, drawn from a half-remembered childhood home. It centres on one image, a door between the known and the unknown. The brand works in negative space, on the idea that what matters most sits just out of view.", content: [] },
+    { id: "08", slug: "akan-chief-glasses", title: "Akan Chief Glasses", displayTitle: "Akan Chief Glasses", client: "Vic Mensa", year: "2025", role: "Creative Direction, Design, CGI", discipline: "Design", cover: "assets/covers/VICMENSA.png", blurb: "A one-of-one pair of gold Akan Chief glasses, modelled precisely to Vic Mensa's head. We distilled Akan heritage into a single sculptural form. A whole lineage, carried in one object made for one person.", content: [{type:"img",src:"assets/projects/akan-chief-glasses/1.jpg"},{type:"img",src:"assets/projects/akan-chief-glasses/2.jpg"},{type:"img",src:"assets/projects/akan-chief-glasses/3.jpg"}] },
+    { id: "09", slug: "diamond-grill-auction", title: "Diamond Grill Auction", displayTitle: "Diamond Grill Auction", client: "Sotheby's", year: "2024", role: "CGI", discipline: "CGI", cover: "assets/covers/SOTHEBYS.png", blurb: "We visualised a bespoke diamond grill before it was made, compressing the piece into a precise digital asset accurate enough to be valued and sold. The object existed as information first. That alone anchored a sale estimated at 3 to 5 million dollars.", content: [{type:"img",src:"assets/projects/diamond-grill-auction/1.jpg"},{type:"img",src:"assets/projects/diamond-grill-auction/2.jpg"}] },
+    { id: "10", slug: "piza", title: "PIZA", displayTitle: "PIZA", client: "Piza", year: "2025", role: "Creative Direction, Brand Identity", discipline: "Identity", cover: "assets/covers/PIZA.png", blurb: "A full brand identity built as one structure: strategy, typography, and visual system holding to a single idea. Nothing decorative survives. It reads as clarity and command from launch.", content: [{type:"img",src:"assets/projects/piza/1.jpg"},{type:"img",src:"assets/projects/piza/2.jpg"},{type:"img",src:"assets/projects/piza/3.jpg"}] }
+  ];
+  function coverBg(project) {
+    return "#f2efe9 url(\"" + project.cover + "\") center/cover no-repeat";
+  }
+  window.PROJECTS = PROJECTS;
+  window.coverBg = coverBg;
+
+  function getInitialRoute() {
+    var params = new URLSearchParams(window.location.search);
+    var redirected = params.get("route");
+    if (redirected) { history.replaceState(null, "", redirected); return redirected; }
+    return window.location.pathname;
+  }
+  window._initialRoute = getInitialRoute();
+  </script>
+
+  <script type="text/babel">
+    const { useEffect, useRef, useState, useCallback } = React;
+    function isMobile() { return window.innerWidth <= 768; }
+
+    /* ===================== SMOOTH SCROLL ===================== */
+    function SmoothScroll({ children, scrollKey }) {
+      var containerRef = useRef(null);
+      var contentRef = useRef(null);
+      var scrollTarget = useRef(0);
+      var scrollCurrent = useRef(0);
+      var rafId = useRef(null);
+
+      useEffect(function() {
+        var container = containerRef.current;
+        var content = contentRef.current;
+        if (!container || !content) return;
+        scrollTarget.current = 0; scrollCurrent.current = 0;
+
+        var maxScroll = function() { return Math.max(0, content.scrollHeight - container.clientHeight); };
+        var onWheel = function(e) {
+          e.preventDefault();
+          scrollTarget.current = Math.max(0, Math.min(maxScroll(), scrollTarget.current + e.deltaY));
+        };
+        var touchLastY = 0, velocity = 0;
+        var onTouchStart = function(e) { touchLastY = e.touches[0].clientY; velocity = 0; };
+        var onTouchMove = function(e) {
+          e.preventDefault();
+          var y = e.touches[0].clientY; var dy = touchLastY - y; velocity = dy; touchLastY = y;
+          scrollTarget.current = Math.max(0, Math.min(maxScroll(), scrollTarget.current + dy));
+        };
+        var onTouchEnd = function() {
+          scrollTarget.current = Math.max(0, Math.min(maxScroll(), scrollTarget.current + velocity * 8));
+        };
+
+        container.addEventListener("wheel", onWheel, { passive: false });
+        container.addEventListener("touchstart", onTouchStart, { passive: true });
+        container.addEventListener("touchmove", onTouchMove, { passive: false });
+        container.addEventListener("touchend", onTouchEnd, { passive: true });
+
+        var tick = function() {
+          var delta = scrollTarget.current - scrollCurrent.current;
+          scrollCurrent.current += delta * 0.08;
+          if (Math.abs(delta) < 0.5) scrollCurrent.current = scrollTarget.current;
+          content.style.transform = "translate3d(0, " + (-scrollCurrent.current) + "px, 0)";
+          rafId.current = requestAnimationFrame(tick);
+        };
+        rafId.current = requestAnimationFrame(tick);
+
+        return function() {
+          cancelAnimationFrame(rafId.current);
+          container.removeEventListener("wheel", onWheel);
+          container.removeEventListener("touchstart", onTouchStart);
+          container.removeEventListener("touchmove", onTouchMove);
+          container.removeEventListener("touchend", onTouchEnd);
+        };
+      }, [scrollKey]);
+
+      useEffect(function() {
+        scrollTarget.current = 0; scrollCurrent.current = 0;
+        if (contentRef.current) contentRef.current.style.transform = "translate3d(0, 0, 0)";
+      }, [scrollKey]);
+
+      return (
+        <div ref={containerRef} style={{ position: "fixed", inset: 0, overflow: "hidden", background: "var(--bg)", zIndex: 5 }}>
+          <div ref={contentRef} style={{ willChange: "transform", WebkitBackfaceVisibility: "hidden" }}>{children}</div>
+        </div>
+      );
+    }
+
+    /* ===================== ROUTING ===================== */
+    function navigate(path) { history.pushState(null, "", path); window.dispatchEvent(new Event("popstate")); }
+    function parseRoute(path) {
+      var p = path.replace(/\/+$/, "") || "/";
+      if (p === "/" || p === "/works" || p === "/projects") return { page: "works", slug: null };
+      if (p === "/studio") return { page: "studio", slug: null };
+      if (p === "/contact") return { page: "contact", slug: null };
+      var slug = p.replace(/^\//, "");
+      var proj = window.PROJECTS.find(function(pr) { return pr.slug === slug; });
+      if (proj) return { page: "project", slug: slug };
+      return { page: "works", slug: null };
+    }
+    function useRoute() {
+      var st = useState(parseRoute(window._initialRoute || "/"));
+      useEffect(function() {
+        var onPop = function() { st[1](parseRoute(window.location.pathname)); };
+        window.addEventListener("popstate", onPop);
+        return function() { window.removeEventListener("popstate", onPop); };
+      }, []);
+      return st[0];
+    }
+
+    /* ===================== GALLERY ===================== */
+    function Gallery({ projects, onEnter, cardsReady }) {
+      var n = projects.length;
+      var stH = useState(null); var hoverIdx = stH[0], setHoverIdx = stH[1];
+      var stE = useState(null); var entering = stE[0], setEntering = stE[1];
+      var progressRef = useRef(0), targetRef = useRef(0), velocityRef = useRef(0);
+      var mouseRef = useRef({ x: 0.5, y: 0.5 }), hoverRef = useRef(null);
+      var rafRef = useRef(null), stageRef = useRef(null), wrapperRef = useRef(null);
+      var cardRefs = useRef([]), bannerTitleRef = useRef(null), bannerSubRef = useRef(null), lastBannerIdx = useRef(-1);
+      var mobile = isMobile();
+      var cardW = mobile ? 280 : 520, cardH = mobile ? 183 : 340, spreadX = mobile ? 200 : 360;
+
+      useEffect(function() { hoverRef.current = hoverIdx; }, [hoverIdx]);
+
+      useEffect(function() {
+        if (entering) return;
+        var last = performance.now();
+        var tick = function(t) {
+          var dt = Math.min(64, t - last); last = t;
+          if (!mobile && hoverRef.current == null) {
+            var mx = mouseRef.current.x, dx = mx - 0.5;
+            var sign = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
+            var mag = Math.max(0, Math.abs(dx) - 0.28);
+            if (mag > 0) targetRef.current = Math.max(0, Math.min(n - 1, targetRef.current + sign * mag * mag * 3.0 * (dt / 1000)));
+          }
+          if (Math.abs(velocityRef.current) > 0.0001) {
+            targetRef.current = Math.max(0, Math.min(n - 1, targetRef.current + velocityRef.current));
+            velocityRef.current *= 0.94;
+          }
+          var delta = targetRef.current - progressRef.current;
+          progressRef.current += Math.abs(delta) > 0.0005 ? delta * 0.09 : (progressRef.current = targetRef.current, 0);
+          var progress = progressRef.current;
+
+          if (!mobile && wrapperRef.current) {
+            var mx2 = mouseRef.current.x, my2 = mouseRef.current.y;
+            wrapperRef.current.style.transform = "translate3d(" + ((mx2-0.5)*28) + "px," + ((my2-0.5)*18) + "px,0) rotateX(" + (-(my2-0.5)*8) + "deg) rotateY(" + ((mx2-0.5)*12) + "deg)";
+          }
+
+          var activeIdx = hoverRef.current != null ? hoverRef.current : Math.max(0, Math.min(n-1, Math.round(progress)));
+          for (var i = 0; i < n; i++) {
+            var el = cardRefs.current[i]; if (!el) continue;
+            var o = i - progress;
+            el.style.transform = "translate3d(calc(-50% + " + (o*spreadX) + "px),calc(-50% + " + (((((i%n)+n)%n)*53)%130-65+o*6) + "px)," + (-Math.abs(o)*(mobile?150:220)) + "px) rotate(" + (Math.sin(i*1.3)*3.2) + "deg)";
+            var absO = Math.abs(o);
+            el.style.opacity = absO > 5 ? "0" : absO > 3 ? String(1 - (absO - 3) / 2) : "1";
+            var baseZ = 1000 - Math.abs(Math.round(o*10));
+            var proxZ = Math.round(500 - Math.abs(0.5+(i-progress)*0.18-mouseRef.current.x)*1000);
+            el.style.zIndex = hoverRef.current === i ? 3000 : proxZ + baseZ;
+          }
+
+          if (activeIdx !== lastBannerIdx.current) {
+            lastBannerIdx.current = activeIdx;
+            var proj = projects[activeIdx];
+            if (bannerSubRef.current) bannerSubRef.current.textContent = proj.subtitle || proj.client;
+            if (bannerTitleRef.current) {
+              bannerTitleRef.current.textContent = proj.displayTitle || proj.title;
+              bannerTitleRef.current.style.animation = "none"; bannerTitleRef.current.offsetHeight;
+              bannerTitleRef.current.style.animation = "rise 0.55s cubic-bezier(.2,.7,.2,1)";
+            }
+          }
+          rafRef.current = requestAnimationFrame(tick);
+        };
+        rafRef.current = requestAnimationFrame(tick);
+        return function() { cancelAnimationFrame(rafRef.current); };
+      }, [entering, n, mobile, spreadX, projects]);
+
+      useEffect(function() {
+        if (entering) return;
+        var el = stageRef.current; if (!el) return;
+        var onWheel = function(e) { e.preventDefault(); targetRef.current = Math.max(0, Math.min(n-1, targetRef.current + (e.deltaY+e.deltaX)*0.0025)); };
+        el.addEventListener("wheel", onWheel, { passive: false });
+        return function() { el.removeEventListener("wheel", onWheel); };
+      }, [entering, n]);
+
+      useEffect(function() {
+        if (entering) return;
+        var onKey = function(e) {
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") targetRef.current = Math.min(n-1, Math.round(targetRef.current)+1);
+          else if (e.key === "ArrowLeft" || e.key === "ArrowUp") targetRef.current = Math.max(0, Math.round(targetRef.current)-1);
+          else if (e.key === "Enter") onEnter(projects[Math.max(0, Math.min(n-1, Math.round(progressRef.current)))]);
+        };
+        window.addEventListener("keydown", onKey);
+        return function() { window.removeEventListener("keydown", onKey); };
+      }, [entering, onEnter, projects, n]);
+
+      useEffect(function() {
+        if (entering) return;
+        var el = stageRef.current; if (!el) return;
+        var startX = 0, startProg = 0, dragging = false, lastX = 0, lastT = 0;
+        var onDown = function(e) { dragging = true; velocityRef.current = 0;
+          var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+          startX = cx; lastX = cx; lastT = performance.now(); startProg = targetRef.current; };
+        var onMove = function(e) { if (!dragging) return;
+          var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+          targetRef.current = Math.max(0, Math.min(n-1, startProg + (startX-cx)*0.012)); lastX = cx; lastT = performance.now(); };
+        var onUp = function(e) { if (!dragging) return; dragging = false;
+          var cx = e.clientX != null ? e.clientX : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : lastX);
+          var dt = performance.now() - lastT;
+          if (dt > 0 && dt < 100) velocityRef.current = (lastX - cx) / dt * 0.3; };
+        el.addEventListener("mousedown", onDown); window.addEventListener("mousemove", onMove); window.addEventListener("mouseup", onUp);
+        el.addEventListener("touchstart", onDown, { passive: true }); window.addEventListener("touchmove", onMove, { passive: true }); window.addEventListener("touchend", onUp, { passive: true });
+        return function() { el.removeEventListener("mousedown", onDown); window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp);
+          el.removeEventListener("touchstart", onDown); window.removeEventListener("touchmove", onMove); window.removeEventListener("touchend", onUp); };
+      }, [entering, n]);
+
+      useEffect(function() {
+        var el = stageRef.current; if (!el) return;
+        var onMove = function(e) { var r = el.getBoundingClientRect(); mouseRef.current = { x: (e.clientX-r.left)/r.width, y: (e.clientY-r.top)/r.height }; };
+        el.addEventListener("mousemove", onMove);
+        return function() { el.removeEventListener("mousemove", onMove); };
+      }, []);
+
+      var handleEnter = function(project) { setEntering(project); setTimeout(function() { onEnter(project); }, 900); };
+
+      return (
+        <div ref={stageRef} style={{ position: "fixed", inset: 0, background: "var(--bg)",
+          perspective: mobile ? "1200px" : "1800px", perspectiveOrigin: "50% 50%",
+          overflow: "hidden", userSelect: "none", touchAction: "none" }}>
+          <div ref={wrapperRef} style={{ position: "absolute", inset: 0,
+            WebkitTransformStyle: "preserve-3d", transformStyle: "preserve-3d",
+            transition: mobile ? "none" : "transform 0.5s cubic-bezier(.2,.7,.2,1)", pointerEvents: "none" }}>
+            {projects.map(function(p, i) {
+              var isEntering = entering && entering.id === p.id;
+              var enterStyle = isEntering ? { transform: "translate3d(-50%,-50%,500px) scale(2)", opacity: 0,
+                transition: "transform 0.9s cubic-bezier(.6,.02,.2,1), opacity 0.9s" }
+                : entering ? { opacity: 0, transition: "opacity 0.35s" } : {};
+              var floatDelay = cardsReady ? (i * 0.06) + "s" : "0s";
+              var floatStyle = cardsReady && !entering ? {
+                animation: "cardFloat 0.8s cubic-bezier(.2,.7,.2,1) " + floatDelay + " both"
+              } : (!cardsReady && !entering) ? { opacity: 0 } : {};
+              return (
+                <div key={p.id} ref={function(el) { cardRefs.current[i] = el; }} className="gallery-card"
+                  onMouseEnter={function() { setHoverIdx(i); }}
+                  onMouseLeave={function() { setHoverIdx(function(c) { return c === i ? null : c; }); }}
+                  onClick={function() { handleEnter(p); }}
+                  style={{ position: "absolute", left: "50%", top: "50%", width: cardW, height: cardH,
+                    pointerEvents: "auto", cursor: "pointer", zIndex: isEntering ? 9999 : 1000, ...floatStyle, ...enterStyle }}>
+                  <div style={{ position: "relative", width: "100%", height: "100%",
+                    transform: hoverIdx === i ? "scale(1.02)" : "scale(1)", transition: "transform 0.4s" }}>
+                    <img src={p.cover} alt={p.title} draggable="false" style={{
+                      position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain",
+                      transform: "translateZ(0)", userSelect: "none", WebkitUserDrag: "none", WebkitBackfaceVisibility: "hidden" }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ position: "absolute", left: "50%", bottom: mobile ? 48 : 64,
+            transform: "translateX(-50%)", textAlign: "center", opacity: entering ? 0 : (cardsReady ? 1 : 0), transition: "opacity 0.6s",
+            pointerEvents: "none", maxWidth: "90vw", width: "100%", padding: "0 16px" }}>
+            <div ref={bannerSubRef} style={{ display: "none" }}>{projects[0].subtitle}</div>
+            <h1 ref={bannerTitleRef} style={{ fontWeight: 400,
+              fontSize: mobile ? 14 : 16, lineHeight: 1.55, letterSpacing: "-0.01em",
+              margin: 0, color: "var(--fg)",
+              animation: "rise 0.55s cubic-bezier(.2,.7,.2,1)" }}>{projects[0].displayTitle || projects[0].title}</h1>
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== PROJECT DETAIL ===================== */
+    function ProjectDetail({ project, allProjects, onBack, onNext, onNav }) {
+      var stM = useState(false); var mounted = stM[0], setMounted = stM[1];
+      var mobile = isMobile();
+      useEffect(function() { var t = setTimeout(function() { setMounted(true); }, 30); return function() { clearTimeout(t); }; }, []);
+      var nextIdx = (allProjects.findIndex(function(p) { return p.id === project.id; }) + 1) % allProjects.length;
+      var next = allProjects[nextIdx];
+      var hasImgHero = project.content && project.content.length > 0 && project.content[0].type === "img";
+      var heroSrc = hasImgHero ? project.content[0].src : project.cover;
+      var contentItems = project.content ? (hasImgHero ? project.content.slice(1) : project.content) : [];
+
+      return (
+        <SmoothScroll scrollKey={project.id}>
+          <div style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.5s", animation: "slideIn 0.6s cubic-bezier(.2,.7,.2,1)" }}>
+            <section style={{ position: "relative", width: "100%", overflow: "hidden",
+              padding: mobile ? "80px 20px 40px" : "100px 32px 60px" }}>
+              {heroSrc.endsWith(".mp4") ? (
+                <video src={heroSrc} autoPlay muted loop playsInline style={{
+                  width: "100%", maxWidth: 1200, display: "block", margin: "0 auto", objectFit: "contain",
+                  transform: mounted ? "scale(1) translateZ(0)" : "scale(1.02) translateZ(0)",
+                  transition: "transform 1.2s cubic-bezier(.2,.7,.2,1)", WebkitBackfaceVisibility: "hidden" }} />
+              ) : (
+                <img src={heroSrc} alt={project.title} style={{
+                  width: "100%", maxWidth: 1200, display: "block", margin: "0 auto", objectFit: "contain",
+                  transform: mounted ? "scale(1) translateZ(0)" : "scale(1.02) translateZ(0)",
+                  transition: "transform 1.2s cubic-bezier(.2,.7,.2,1)", WebkitBackfaceVisibility: "hidden" }} />
+              )}
+            </section>
+
+            <section style={{ maxWidth: 640, margin: "0 auto", padding: mobile ? "32px 20px" : "48px 32px", textAlign: "center" }}>
+              <h1 style={{ fontWeight: 400, fontSize: mobile ? 14 : 16,
+                lineHeight: 1.55, letterSpacing: "-0.01em", margin: "0 0 20px", color: "var(--fg)" }}>{project.displayTitle || project.title}</h1>
+              <div style={{ fontSize: 11, fontWeight: 400, lineHeight: 1.6, letterSpacing: "-0.01em",
+                color: "var(--fg-dim)", margin: "0 0 24px" }}>
+                {project.client} — {project.year}<br/>{project.role}
+              </div>
+              <p style={{ fontWeight: 400, fontSize: mobile ? 13 : 14, lineHeight: 1.6, letterSpacing: "-0.01em",
+                color: "var(--fg)", margin: 0 }}>{project.blurb}</p>
+            </section>
+
+            {contentItems.length > 0 && (
+              <section style={{ padding: mobile ? "20px 20px 80px" : "40px 32px 120px", maxWidth: 1200, margin: "0 auto" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: mobile ? 40 : 64 }}>
+                  {contentItems.map(function(item, idx) {
+                    if (item.type === "video") {
+                      return (
+                        <video key={idx} src={item.src} autoPlay muted loop playsInline style={{
+                          width: "100%", display: "block", objectFit: "contain" }} />
+                      );
+                    }
+                    return (
+                      <img key={idx} src={item.src} alt={project.title + " " + (idx + 2)} loading="lazy" style={{
+                        width: "100%", display: "block", objectFit: "contain" }} />
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            <section onClick={function() { onNext(next); }} style={{
+              position: "relative", height: mobile ? "50vh" : "70vh", cursor: "pointer", overflow: "hidden",
+              borderTop: "1px solid var(--line)" }}>
+              <div style={{ position: "absolute", inset: 0, background: coverBg(next), filter: "brightness(0.85)" }}/>
+              <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", textAlign: "center", color: "#fff" }}>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "-0.01em", opacity: 0.85,
+                    marginBottom: mobile ? 12 : 20, textShadow: "0 1px 12px rgba(0,0,0,0.3)" }}>Next</div>
+                  <div style={{ fontWeight: 400, fontSize: mobile ? 14 : 16,
+                    lineHeight: 1.55, letterSpacing: "-0.01em", textShadow: "0 2px 40px rgba(0,0,0,0.25)" }}>{next.displayTitle || next.title}</div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </SmoothScroll>
+      );
+    }
+
+    /* ===================== NAV ===================== */
+    function Nav({ onNav, page }) {
+      var mobile = isMobile();
+      return (
+        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+          padding: mobile ? "20px 16px" : "24px 32px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          pointerEvents: "none",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%)",
+          backdropFilter: "blur(15px)", WebkitBackdropFilter: "blur(15px)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: mobile ? 16 : 24, pointerEvents: "auto",
+            fontSize: mobile ? 11 : 12, fontWeight: 500, color: "var(--fg)", letterSpacing: "-0.01em" }}>
+            <NavLink active={page === "works"} label="Works" onClick={function() { onNav("works"); }} />
+            <NavLink active={page === "studio"} label="Studio" onClick={function() { onNav("studio"); }} />
+            <NavLink active={page === "contact"} label="Contact" onClick={function() { onNav("contact"); }} />
+          </div>
+        </nav>
+      );
+    }
+
+    function NavLink({ label, active, onClick }) {
+      var st = useState(false); var hover = st[0], setHover = st[1];
+      return (
+        <a href={"/" + label.toLowerCase()} onClick={function(e) { e.preventDefault(); onClick && onClick(); }}
+          onMouseEnter={function() { setHover(true); }} onMouseLeave={function() { setHover(false); }}
+          style={{ color: active || hover ? "var(--fg)" : "var(--fg-dim)", textDecoration: active ? "underline" : "none",
+            textUnderlineOffset: "4px", transition: "color 0.2s" }}>{label}</a>
+      );
+    }
+
+    /* ===================== STUDIO PAGE ===================== */
+    function StudioPage({ entering }) {
+      var mobile = isMobile();
+      return (
+        <div style={{ position: "fixed", inset: 0, background: "var(--bg)", zIndex: 5,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          animation: "slideIn 0.6s cubic-bezier(.2,.7,.2,1)",
+          opacity: entering ? 0 : 1, transition: "opacity 0.5s" }}>
+          <div style={{ maxWidth: 560, width: "100%", padding: mobile ? "0 20px" : "0 40px", textAlign: "center" }}>
+            <p style={{ fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg)", margin: 0 }}>
+              An artist-led studio working in subtraction. We remove everything that isn't essential. What remains is the work.
+            </p>
+            <p style={{ fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg-dim)", margin: "1.2em 0 0" }}>
+              Founded by James Jefferys.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== CONTACT PAGE ===================== */
+    function ContactPage({ entering }) {
+      var mobile = isMobile();
+      return (
+        <div style={{ position: "fixed", inset: 0, background: "var(--bg)", zIndex: 5,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          animation: "slideIn 0.6s cubic-bezier(.2,.7,.2,1)",
+          opacity: entering ? 0 : 1, transition: "opacity 0.5s" }}>
+          <div style={{ maxWidth: 560, width: "100%", padding: mobile ? "0 20px" : "0 40px", textAlign: "center" }}>
+            <a href="mailto:00@jamesjfrys.studio" style={{
+              fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg)", textDecoration: "underline", textUnderlineOffset: "3px",
+              textDecorationColor: "var(--line)", transition: "text-decoration-color 0.2s"
+            }} onMouseEnter={function(e) { e.currentTarget.style.textDecorationColor = "var(--fg)"; }}
+               onMouseLeave={function(e) { e.currentTarget.style.textDecorationColor = "var(--line)"; }}>00@jamesjfrys.studio</a>
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== INTRO ===================== */
+    function IntroOverlay({ onDone }) {
+      var stH = useState(false); var hidden = stH[0], setHidden = stH[1];
+      var stLoaded = useState(false); var loaded = stLoaded[0], setLoaded = stLoaded[1];
+
+      useEffect(function() {
+        var images = window.PROJECTS.map(function(p) { return p.cover; });
+        var count = 0;
+        images.forEach(function(src) {
+          var img = new Image();
+          img.onload = img.onerror = function() {
+            count++;
+            if (count >= images.length) setLoaded(true);
+          };
+          img.src = src;
+        });
+        var fallback = setTimeout(function() { setLoaded(true); }, 4000);
+        return function() { clearTimeout(fallback); };
+      }, []);
+
+      useEffect(function() {
+        if (!loaded) return;
+        var t = setTimeout(function() { setHidden(true); onDone && onDone(); }, 300);
+        return function() { clearTimeout(t); };
+      }, [loaded]);
+
+      return (
+        <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "var(--bg)",
+          display: "grid", placeItems: "center",
+          transition: "opacity 0.7s cubic-bezier(.2,.7,.2,1)",
+          opacity: hidden ? 0 : 1,
+          pointerEvents: hidden ? "none" : "auto" }}>
+          <div style={{ width: 24, height: 24, position: "relative" }}>
+            <div style={{ position: "absolute", inset: 0, borderRadius: "50%",
+              border: "1.5px solid var(--fg)", borderTopColor: "transparent",
+              animation: "loaderSpin 0.8s linear infinite" }} />
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== APP ===================== */
+    function App() {
+      var route = useRoute();
+      var stI = useState(false); var introDone = stI[0], setIntroDone = stI[1];
+      var stCards = useState(false); var cardsReady = stCards[0], setCardsReady = stCards[1];
+      var stTransition = useState(null); var transitioning = stTransition[0], setTransitioning = stTransition[1];
+
+      useEffect(function() {
+        if (route.page !== "works" || route.slug) setIntroDone(true);
+      }, []);
+
+      var handleIntroDone = function() {
+        setIntroDone(true);
+        requestAnimationFrame(function() { setCardsReady(true); });
+      };
+
+      var handleEnter = function(project) { navigate("/" + project.slug); };
+      var handleBack = function() { navigate("/works"); };
+      var handleNext = function(next) { navigate("/" + next.slug); };
+      var handleNav = function(p) {
+        if (p === "works" && (route.page === "studio" || route.page === "contact")) {
+          setTransitioning("works");
+          setTimeout(function() {
+            navigate("/" + p);
+            setCardsReady(false);
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() { setCardsReady(true); setTransitioning(null); });
+            });
+          }, 400);
+        } else {
+          navigate("/" + p);
+        }
+      };
+
+      var activeProject = route.slug ? window.PROJECTS.find(function(p) { return p.slug === route.slug; }) : null;
+
+      useEffect(function() {
+        if (activeProject) document.title = activeProject.title + " - Studio Subtract";
+        else if (route.page === "studio") document.title = "Studio - Studio Subtract";
+        else if (route.page === "contact") document.title = "Contact - Studio Subtract";
+        else document.title = "Studio Subtract";
+      }, [route, activeProject]);
+
+      useEffect(function() {
+        if (introDone && route.page === "works" && !activeProject && !cardsReady) {
+          setCardsReady(true);
+        }
+      }, [introDone, route.page, activeProject]);
+
+      return (
+        <>
+          {!introDone && <IntroOverlay onDone={handleIntroDone} />}
+          <Nav onNav={handleNav} page={route.page} />
+          {route.page === "works" && !activeProject && <Gallery projects={window.PROJECTS} onEnter={handleEnter} cardsReady={cardsReady} />}
+          {route.page === "studio" && <StudioPage entering={transitioning === "works"} />}
+          {route.page === "contact" && <ContactPage entering={transitioning === "works"} />}
+          {activeProject && (
+            <ProjectDetail key={activeProject.id} project={activeProject} allProjects={window.PROJECTS}
+              onBack={handleBack} onNext={handleNext} onNav={handleNav} />
+          )}
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
