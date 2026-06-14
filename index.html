@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Studio Subtract</title>
+<meta name="description" content="An artist-led studio working in subtraction. We remove everything that isn't essential." />
+<meta property="og:site_name" content="Studio Subtract" />
+<meta property="og:title" content="Studio Subtract" />
+<meta property="og:description" content="An artist-led studio working in subtraction. We remove everything that isn't essential." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.studiosubtract.com" />
+<meta property="og:image" content="https://www.studiosubtract.com/assets/social-preview.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Studio Subtract" />
+<meta name="twitter:description" content="An artist-led studio working in subtraction. We remove everything that isn't essential." />
+<meta name="twitter:image" content="https://www.studiosubtract.com/assets/social-preview.png" />
+<meta name="theme-color" content="#ffffff" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><style>circle{stroke:%231d2029;fill:none;stroke-width:6}@media(prefers-color-scheme:dark){circle{stroke:%23ffffff}}</style><circle cx='50' cy='50' r='40'/></svg>" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1d2029;
+    --fg-mid: #49505d;
+    --fg-dim: #8a8f9a;
+    --line: rgba(29,32,41,0.1);
+    --sans: "Neue Haas Grotesk Display", "Neue Haas Grotesk", "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--sans); overflow: hidden; height: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+  *::selection { background: var(--fg); color: var(--bg); }
+  * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cardFloat {
+    from { opacity: 0; transform: translate3d(0, 60px, -200px) scale(0.92); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  }
+  @keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+  .smooth-scroll::-webkit-scrollbar { width: 0; }
+  .smooth-scroll { scrollbar-width: none; }
+
+  button:focus-visible, a:focus-visible { outline: 1px solid var(--fg); outline-offset: 2px; }
+  .gallery-card {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script>
+  var GALLERY_ITEMS = [
+    { src: "assets/gallery/001.jpg", type: "img", r: 1.4141, label: "collection" },
+    { src: "assets/gallery/002.jpg", type: "img", r: 1.5005, label: "02" },
+    { src: "assets/gallery/003.jpg", type: "img", r: 1.5317, label: "Screenshot 2026-05-23 at 18.52.35" },
+    { src: "assets/gallery/004.jpg", type: "img", r: 1.4141, label: "LOGOCONSTRUCTION-1" },
+    { src: "assets/gallery/005.jpg", type: "img", r: 1.4141, label: "LOGOCONSTRUCTION-2" },
+    { src: "assets/gallery/006.jpg", type: "img", r: 1.4141, label: "LOGOCONSTRUCTION-3" },
+    { src: "assets/gallery/007.jpg", type: "img", r: 1.4141, label: "SORTACASE-1" },
+    { src: "assets/gallery/008.jpg", type: "img", r: 1.1466, label: "Screenshot 2025-09-23 at 12.20.40" },
+    { src: "assets/gallery/009.jpg", type: "img", r: 1.4141, label: "SORTACASE-2" },
+    { src: "assets/gallery/010.jpg", type: "img", r: 1.4141, label: "SHADOU-1" },
+    { src: "assets/gallery/011.jpg", type: "img", r: 1.4141, label: "SHADOU-2" },
+    { src: "assets/gallery/012.jpg", type: "img", r: 1.0, label: "vinyl-whtcarla" },
+    { src: "assets/gallery/013.jpg", type: "img", r: 1.4141, label: "DesignersToolkit" },
+    { src: "assets/gallery/014.jpg", type: "img", r: 1.4141, label: "14-1" },
+    { src: "assets/gallery/015.jpg", type: "img", r: 1.4141, label: "14-4" },
+    { src: "assets/gallery/016.jpg", type: "img", r: 1.4141, label: "14-2" },
+    { src: "assets/gallery/017.jpg", type: "img", r: 1.4141, label: "14-3" },
+    { src: "assets/gallery/018.mp4", type: "video", r: 1.7667, label: "ghostinginterface" },
+    { src: "assets/gallery/019.mp4", type: "video", r: 1.2821, label: "neumorphics-testingg-heartbeat" },
+    { src: "assets/gallery/020.jpg", type: "img", r: 1.4141, label: "SJJ-3" },
+    { src: "assets/gallery/021.jpg", type: "img", r: 1.0339, label: "Screenshot 2026-04-12 121919" },
+    { src: "assets/gallery/022.mp4", type: "video", r: 1.2183, label: "bookfrom000000" },
+    { src: "assets/gallery/023.jpg", type: "img", r: 1.4141, label: "SJJ-2" },
+    { src: "assets/gallery/024.mp4", type: "video", r: 1.7844, label: "Contact" },
+    { src: "assets/gallery/025.mp4", type: "video", r: 1.7778, label: "Soft Surface Interface" },
+    { src: "assets/gallery/026.jpg", type: "img", r: 1.4141, label: "SJJ-4" },
+    { src: "assets/gallery/027.jpg", type: "img", r: 1.4141, label: "SJJ" },
+    { src: "assets/gallery/028.jpg", type: "img", r: 0.7071, label: "HikariNoYami-03" },
+    { src: "assets/gallery/029.jpg", type: "img", r: 0.7071, label: "HikariNoYami-02-red" },
+    { src: "assets/gallery/030.jpg", type: "img", r: 0.7071, label: "HikariNoYami-01" },
+    { src: "assets/gallery/031.jpg", type: "img", r: 0.7071, label: "HikariNoYami-04" },
+    { src: "assets/gallery/032.jpg", type: "img", r: 0.7071, label: "HikariNoYami-06" },
+    { src: "assets/gallery/033.jpg", type: "img", r: 0.7071, label: "HikariNoYami-05" },
+    { src: "assets/gallery/034.jpg", type: "img", r: 1.5119, label: "projection1" },
+    { src: "assets/gallery/035.jpg", type: "img", r: 1.5119, label: "projection2" },
+    { src: "assets/gallery/036.jpg", type: "img", r: 1.4491, label: "Screenshot 2026-06-13 221128" },
+    { src: "assets/gallery/037.jpg", type: "img", r: 1.5979, label: "Screenshot 2026-06-13 221122" },
+    { src: "assets/gallery/038.jpg", type: "img", r: 1.0582, label: "card-sample2" },
+    { src: "assets/gallery/039.mp4", type: "video", r: 1.5434, label: "fadedmem" },
+    { src: "assets/gallery/040.jpg", type: "img", r: 1.3333, label: "akanchief-vicmensa-1" },
+    { src: "assets/gallery/041.jpg", type: "img", r: 1.3333, label: "akanchief-vicmensa-2" },
+    { src: "assets/gallery/042.jpg", type: "img", r: 1.3333, label: "akanchief-vicmensa-3" },
+    { src: "assets/gallery/043.jpg", type: "img", r: 0.7857, label: "horizon-removal" },
+    { src: "assets/gallery/044.jpg", type: "img", r: 1.3333, label: "dining-set1" },
+    { src: "assets/gallery/045.jpg", type: "img", r: 1.3333, label: "dining-set2" },
+    { src: "assets/gallery/046.jpg", type: "img", r: 1.3333, label: "dining-set3" },
+    { src: "assets/gallery/047.jpg", type: "img", r: 1.3333, label: "dining-set7" },
+    { src: "assets/gallery/048.jpg", type: "img", r: 2.1212, label: "Screenshot 2025-01-09 092136" },
+    { src: "assets/gallery/049.jpg", type: "img", r: 1.7917, label: "PIZAglobal" },
+    { src: "assets/gallery/050.jpg", type: "img", r: 1.0, label: "pizamock5" },
+    { src: "assets/gallery/051.jpg", type: "img", r: 1.6, label: "sothebys-iandelucca-topviewvis" },
+    { src: "assets/gallery/052.jpg", type: "img", r: 1.4721, label: "foamr-s" },
+    { src: "assets/gallery/053.jpg", type: "img", r: 1.2567, label: "moulds-7" },
+    { src: "assets/gallery/054.jpg", type: "img", r: 1.0796, label: "Screenshot 2026-05-10 151513" },
+    { src: "assets/gallery/055.jpg", type: "img", r: 1.262, label: "burden-sculpts" },
+    { src: "assets/gallery/056.mp4", type: "video", r: 0.8146, label: "whalemousetrack-simulation" },
+    { src: "assets/gallery/057.mp4", type: "video", r: 1.8428, label: "2025-07-28_17-26-25water-digi-sims" },
+    { src: "assets/gallery/058.mp4", type: "video", r: 1.1034, label: "v8.1" },
+    { src: "assets/gallery/059.mp4", type: "video", r: 0.7646, label: "removal--sim" },
+    { src: "assets/gallery/060.jpg", type: "img", r: 1.6667, label: "original_9d" },
+    { src: "assets/gallery/061.jpg", type: "img", r: 1.3153, label: "original_7d" },
+    { src: "assets/gallery/062.jpg", type: "img", r: 1.25, label: "ihategumcollab3" },
+    { src: "assets/gallery/063.mp4", type: "video", r: 1.2667, label: "ihategumcollab2" },
+    { src: "assets/gallery/064.jpg", type: "img", r: 1.25, label: "ihategumcollab1" },
+    { src: "assets/gallery/065.mp4", type: "video", r: 1.7667, label: "ihategum-proto" },
+    { src: "assets/gallery/066.jpg", type: "img", r: 1.0873, label: "Screenshot 2025-03-01 202405" },
+    { src: "assets/gallery/067.jpg", type: "img", r: 1.0669, label: "Screenshot 2025-03-01 202426" },
+    { src: "assets/gallery/068.jpg", type: "img", r: 1.5789, label: "OOO" },
+    { src: "assets/gallery/069.mp4", type: "video", r: 1.7778, label: "erosionparticles" },
+    { src: "assets/gallery/070.mp4", type: "video", r: 1.7778, label: "erosionmorphing" },
+    { src: "assets/gallery/071.jpg", type: "img", r: 1.0, label: "stem-space-new1" },
+    { src: "assets/gallery/072.jpg", type: "img", r: 1.95, label: "stemplayer-space03" },
+    { src: "assets/gallery/073.jpg", type: "img", r: 1.0, label: "stem-space-new2" },
+    { src: "assets/gallery/074.jpg", type: "img", r: 2.0, label: "stemplayer17" },
+    { src: "assets/gallery/075.jpg", type: "img", r: 0.8, label: "sawandsew1" },
+    { src: "assets/gallery/076.jpg", type: "img", r: 0.8, label: "sawandsew2" },
+    { src: "assets/gallery/077.jpg", type: "img", r: 0.8, label: "sawandsew3" },
+    { src: "assets/gallery/078.jpg", type: "img", r: 1.8692, label: "Screenshot_2023-09-14_at_00.37.21" },
+    { src: "assets/gallery/079.jpg", type: "img", r: 0.75, label: "hatsculpt" },
+    { src: "assets/gallery/080.jpg", type: "img", r: 1.7722, label: "henrikuldalen-mock3" },
+    { src: "assets/gallery/081.jpg", type: "img", r: 0.671, label: "mona2" },
+    { src: "assets/gallery/082.mp4", type: "video", r: 1.7778, label: "carla2" },
+    { src: "assets/gallery/083.mp4", type: "video", r: 1.7778, label: "newshort-carla" },
+    { src: "assets/gallery/084.mp4", type: "video", r: 1.7667, label: "speakerscape2" },
+    { src: "assets/gallery/085.jpg", type: "img", r: 1.2594, label: "izaakeven-spatialsketches-1" },
+    { src: "assets/gallery/086.jpg", type: "img", r: 1.2581, label: "izaakeven-spatialsketches-2" },
+    { src: "assets/gallery/087.jpg", type: "img", r: 1.9364, label: "Screenshot 2025-03-31 113021" },
+    { src: "assets/gallery/088.jpg", type: "img", r: 0.9403, label: "Screenshot 2025-03-14 174832" },
+    { src: "assets/gallery/089.jpg", type: "img", r: 1.4114, label: "Screenshot 2025-03-06 151750" },
+    { src: "assets/gallery/090.jpg", type: "img", r: 1.7355, label: "Screenshot 2026-06-13 152059" },
+    { src: "assets/gallery/091.jpg", type: "img", r: 0.8893, label: "Screenshot 2025-04-15 172515" },
+    { src: "assets/gallery/092.jpg", type: "img", r: 1.3397, label: "IMG_5864" },
+    { src: "assets/gallery/093.jpg", type: "img", r: 1.5317, label: "Screenshot_2026-02-27_at_12.17.27" },
+    { src: "assets/gallery/094.jpg", type: "img", r: 1.1781, label: "Screenshot 2026-04-11 230321" },
+    { src: "assets/gallery/095.jpg", type: "img", r: 1.5317, label: "jpawebprototype" },
+    { src: "assets/gallery/096.mp4", type: "video", r: 1.0, label: "Contact Form -N [60f]" },
+    { src: "assets/gallery/097.jpg", type: "img", r: 1.5317, label: "datafurn-research-1" },
+    { src: "assets/gallery/098.jpg", type: "img", r: 1.5317, label: "datafurn-research-2" },
+    { src: "assets/gallery/099.jpg", type: "img", r: 0.8, label: "calendar_1" },
+    { src: "assets/gallery/100.jpg", type: "img", r: 1.6706, label: "MacBook 2, S3" },
+    { src: "assets/gallery/101.mp4", type: "video", r: 1.7778, label: "AOI ID 1" },
+    { src: "assets/gallery/102.jpg", type: "img", r: 1.1366, label: "IMG_7051" },
+    { src: "assets/gallery/103.jpg", type: "img", r: 1.0, label: "AOI-23" },
+    { src: "assets/gallery/104.jpg", type: "img", r: 1.0, label: "aoi-3d-08" },
+    { src: "assets/gallery/105.jpg", type: "img", r: 1.7562, label: "Screenshot 2026-06-13 152001" },
+    { src: "assets/gallery/106.jpg", type: "img", r: 1.2313, label: "contactscan-jesse 1" },
+    { src: "assets/gallery/107.mp4", type: "video", r: 0.8, label: "finals-vidmeshed" },
+    { src: "assets/gallery/108.jpg", type: "img", r: 1.2313, label: "contactscan-jesse 2" },
+    { src: "assets/gallery/109.mp4", type: "video", r: 1.7778, label: "LK001 - Loho Kur 3" },
+    { src: "assets/gallery/110.mp4", type: "video", r: 1.7778, label: "LK001 - Loho Kur 2" },
+    { src: "assets/gallery/111.mp4", type: "video", r: 1.7778, label: "LK001 - Loho Kur 1" },
+    { src: "assets/gallery/112.jpg", type: "img", r: 0.8121, label: "close up 14" },
+    { src: "assets/gallery/113.jpg", type: "img", r: 0.8121, label: "close up 38" },
+    { src: "assets/gallery/114.jpg", type: "img", r: 0.75, label: "close up 4" },
+    { src: "assets/gallery/115.jpg", type: "img", r: 0.8125, label: "close up 13" },
+    { src: "assets/gallery/116.mp4", type: "video", r: 0.8333, label: "Graphic Design Manual" },
+    { src: "assets/gallery/117.mp4", type: "video", r: 1.0, label: "Modular" },
+    { src: "assets/gallery/118.jpg", type: "img", r: 1.1392, label: "Erosion-Screenshot_2023-06-23_214346" },
+    { src: "assets/gallery/119.jpg", type: "img", r: 0.8429, label: "Erosion-Screenshot_2023-06-23_214406" },
+    { src: "assets/gallery/120.jpg", type: "img", r: 0.75, label: "erosion-zellerfeldsample-2" },
+    { src: "assets/gallery/121.jpg", type: "img", r: 0.75, label: "erosion-zellerfeldsample-1" },
+    { src: "assets/gallery/122.jpg", type: "img", r: 1.0, label: "erosionrockvis4" },
+    { src: "assets/gallery/123.jpg", type: "img", r: 1.0, label: "erosionrockvis1" },
+    { src: "assets/gallery/124.mp4", type: "video", r: 1.3333, label: "EROSION_COMPR_2" },
+    { src: "assets/gallery/125.mp4", type: "video", r: 1.3333, label: "EROSION_COMPR_1" },
+    { src: "assets/gallery/126.jpg", type: "img", r: 1.25, label: "slides 2_0000_page 1" },
+    { src: "assets/gallery/127.jpg", type: "img", r: 1.25, label: "slides 2_0001_page 2" },
+    { src: "assets/gallery/128.jpg", type: "img", r: 1.25, label: "slides 2_0004_page 5" },
+    { src: "assets/gallery/129.jpg", type: "img", r: 1.25, label: "slides 2_0003_page 4" },
+    { src: "assets/gallery/130.jpg", type: "img", r: 1.25, label: "slides 2_0008_page 9" },
+    { src: "assets/gallery/131.jpg", type: "img", r: 1.25, label: "slides 2_0005_page 6" }
+  ];
+  window.GALLERY_ITEMS = GALLERY_ITEMS;
+
+  function getInitialRoute() {
+    var params = new URLSearchParams(window.location.search);
+    var redirected = params.get("route");
+    if (redirected) { history.replaceState(null, "", redirected); return redirected; }
+    return window.location.pathname;
+  }
+  window._initialRoute = getInitialRoute();
+  </script>
+
+  <script type="text/babel">
+    const { useEffect, useRef, useState, useCallback } = React;
+    function isMobile() { return window.innerWidth <= 768; }
+
+    /* ===================== SMOOTH SCROLL ===================== */
+    function SmoothScroll({ children, scrollKey }) {
+      var containerRef = useRef(null);
+      var contentRef = useRef(null);
+      var scrollTarget = useRef(0);
+      var scrollCurrent = useRef(0);
+      var rafId = useRef(null);
+      var mobile = isMobile();
+
+      useEffect(function() {
+        if (mobile) {
+          if (containerRef.current) containerRef.current.scrollTop = 0;
+          return;
+        }
+        var container = containerRef.current;
+        var content = contentRef.current;
+        if (!container || !content) return;
+        scrollTarget.current = 0; scrollCurrent.current = 0;
+
+        var maxScroll = function() { return Math.max(0, content.scrollHeight - container.clientHeight); };
+        var onWheel = function(e) {
+          e.preventDefault();
+          scrollTarget.current = Math.max(0, Math.min(maxScroll(), scrollTarget.current + e.deltaY));
+        };
+
+        container.addEventListener("wheel", onWheel, { passive: false });
+
+        var tick = function() {
+          var delta = scrollTarget.current - scrollCurrent.current;
+          scrollCurrent.current += delta * 0.08;
+          if (Math.abs(delta) < 0.5) scrollCurrent.current = scrollTarget.current;
+          content.style.transform = "translate3d(0, " + (-scrollCurrent.current) + "px, 0)";
+          rafId.current = requestAnimationFrame(tick);
+        };
+        rafId.current = requestAnimationFrame(tick);
+
+        return function() {
+          cancelAnimationFrame(rafId.current);
+          container.removeEventListener("wheel", onWheel);
+        };
+      }, [scrollKey, mobile]);
+
+      if (mobile) {
+        return (
+          <div ref={containerRef} style={{ position: "fixed", inset: 0, overflowY: "auto", overflowX: "hidden",
+            background: "var(--bg)", zIndex: 5, WebkitOverflowScrolling: "touch" }}>{children}</div>
+        );
+      }
+
+      return (
+        <div ref={containerRef} style={{ position: "fixed", inset: 0, overflow: "hidden", background: "var(--bg)", zIndex: 5 }}>
+          <div ref={contentRef} style={{ willChange: "transform", WebkitBackfaceVisibility: "hidden" }}>{children}</div>
+        </div>
+      );
+    }
+
+    /* ===================== ROUTING ===================== */
+    function navigate(path) { history.pushState(null, "", path); window.dispatchEvent(new Event("popstate")); }
+    function parseRoute(path) {
+      var p = path.replace(/\/+$/, "") || "/";
+      if (p === "/" || p === "/works" || p === "/projects" || p.indexOf("subtract-index") !== -1) return { page: "works", slug: null };
+      if (p === "/studio") return { page: "studio", slug: null };
+      if (p === "/contact") return { page: "contact", slug: null };
+      var slug = p.replace(/^\//, "");
+      if (window.PROJECTS) { var proj = window.PROJECTS.find(function(pr) { return pr.slug === slug; }); if (proj) return { page: "project", slug: slug }; }
+      return { page: "works", slug: null };
+    }
+    function useRoute() {
+      var st = useState(parseRoute(window._initialRoute || "/"));
+      useEffect(function() {
+        var onPop = function() { st[1](parseRoute(window.location.pathname)); };
+        window.addEventListener("popstate", onPop);
+        return function() { window.removeEventListener("popstate", onPop); };
+      }, []);
+      return st[0];
+    }
+
+    /* ===================== GALLERY ===================== */
+    function cardScale(r) {
+      if (r >= 1) return 1;
+      var t = Math.min(1, (1 - r) / 0.6);
+      return 1 - t * 0.35;
+    }
+    function cardLabel(item) {
+      var ext = item.src.substring(item.src.lastIndexOf("."));
+      return (item.label || "") + ext;
+    }
+
+    var MAX_VISIBLE = 15;
+
+    function Gallery({ items }) {
+      var n = items.length;
+      var startIdx = window._galleryProgress != null ? Math.round(window._galleryProgress) : 24;
+      if (startIdx < 0 || startIdx >= items.length) startIdx = 24;
+      var progressRef = useRef(startIdx), targetRef = useRef(startIdx), velocityRef = useRef(0);
+      var mouseRef = useRef({ x: 0.5, y: 0.5 });
+      var rafRef = useRef(null), stageRef = useRef(null), wrapperRef = useRef(null);
+      var bannerTitleRef = useRef(null), lastBannerIdx = useRef(-1);
+      var fadeRef = useRef(0);
+      var stReady = useState(false); var ready = stReady[0], setReady = stReady[1];
+      var stVisible = useState([]); var visible = stVisible[0], setVisible = stVisible[1];
+      var slotRefs = useRef([]);
+      var lastVisibleKey = useRef("");
+      var mobile = isMobile();
+      var cardW = mobile ? 322 : 598, spreadX = mobile ? 220 : 396;
+
+      useEffect(function() {
+        var t = setTimeout(function() { setReady(true); }, 80);
+        return function() { clearTimeout(t); };
+      }, []);
+
+      useEffect(function() {
+        var tick = function() {
+          if (ready && fadeRef.current < 1) fadeRef.current = Math.min(1, fadeRef.current + 0.016);
+          window._galleryProgress = progressRef.current;
+
+          if (!mobile) {
+            var mx = mouseRef.current.x, dx = mx - 0.5;
+            var sign = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
+            var mag = Math.max(0, Math.abs(dx) - 0.15);
+            if (mag > 0) targetRef.current += sign * mag * mag * 3.0 * (16 / 1000);
+          }
+          if (Math.abs(velocityRef.current) > 0.0001) {
+            targetRef.current += velocityRef.current;
+            velocityRef.current *= mobile ? 0.994 : 0.94;
+          }
+          var delta = targetRef.current - progressRef.current;
+          progressRef.current += Math.abs(delta) > 0.0005 ? delta * (mobile ? 0.06 : 0.09) : (progressRef.current = targetRef.current, 0);
+          var progress = progressRef.current;
+
+          if (wrapperRef.current) {
+            var mx2 = mouseRef.current.x, my2 = mouseRef.current.y;
+            var tiltScale = mobile ? 0.6 : 1;
+            wrapperRef.current.style.transform = "translate3d(" + ((mx2-0.5)*28*tiltScale) + "px," + ((my2-0.5)*18*tiltScale) + "px,0) rotateX(" + (-(my2-0.5)*8*tiltScale) + "deg) rotateY(" + ((mx2-0.5)*12*tiltScale) + "deg)";
+          }
+
+          var center = Math.round(progress);
+          var half = Math.floor(MAX_VISIBLE / 2);
+          var visArr = [];
+          for (var vi = -half; vi <= half; vi++) {
+            visArr.push(((center + vi) % n + n) % n);
+          }
+          var visKey = visArr.join(",");
+          if (visKey !== lastVisibleKey.current) {
+            lastVisibleKey.current = visKey;
+            setVisible(visArr);
+          }
+
+          var activeIdx = ((center % n) + n) % n;
+          var fade = fadeRef.current;
+          for (var si = 0; si < slotRefs.current.length; si++) {
+            var el = slotRefs.current[si]; if (!el) continue;
+            var idx = parseInt(el.dataset.idx, 10);
+            var o = idx - progress;
+            while (o > n / 2) o -= n;
+            while (o < -n / 2) o += n;
+            var sc = cardScale(items[idx].r || 1.5);
+            el.style.transform = "translate3d(calc(-50% + " + (o*spreadX) + "px),calc(-50% + " + (((((idx%n)+n)%n)*53)%130-65+o*6) + "px)," + (-Math.abs(o)*(mobile?150:220)) + "px) rotate(" + (Math.sin(idx*1.3)*3.2) + "deg) scale(" + (sc * (0.92 + 0.08 * fade)) + ")";
+            var absO = Math.abs(o);
+            var cardOpacity = absO > 5 ? 0 : absO > 3 ? 1 - (absO - 3) / 2 : 1;
+            el.style.opacity = String(cardOpacity * fade);
+            el.style.zIndex = 1000 - Math.abs(Math.round(o*10));
+          }
+
+          if (activeIdx !== lastBannerIdx.current) {
+            lastBannerIdx.current = activeIdx;
+            var item = items[activeIdx];
+            if (bannerTitleRef.current) {
+              bannerTitleRef.current.textContent = cardLabel(item);
+              bannerTitleRef.current.style.animation = "none"; bannerTitleRef.current.offsetHeight;
+              bannerTitleRef.current.style.animation = "rise 0.55s cubic-bezier(.2,.7,.2,1)";
+            }
+          }
+          rafRef.current = requestAnimationFrame(tick);
+        };
+        rafRef.current = requestAnimationFrame(tick);
+        return function() { cancelAnimationFrame(rafRef.current); };
+      }, [n, mobile, spreadX, items, ready]);
+
+      useEffect(function() {
+        var el = stageRef.current; if (!el) return;
+        var onWheel = function(e) { e.preventDefault(); targetRef.current += (e.deltaY+e.deltaX)*0.0025; };
+        el.addEventListener("wheel", onWheel, { passive: false });
+        return function() { el.removeEventListener("wheel", onWheel); };
+      }, [n]);
+
+      useEffect(function() {
+        var onKey = function(e) {
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") targetRef.current = Math.round(targetRef.current)+1;
+          else if (e.key === "ArrowLeft" || e.key === "ArrowUp") targetRef.current = Math.round(targetRef.current)-1;
+        };
+        window.addEventListener("keydown", onKey);
+        return function() { window.removeEventListener("keydown", onKey); };
+      }, [n]);
+
+      useEffect(function() {
+        var el = stageRef.current; if (!el) return;
+        var startX = 0, startProg = 0, dragging = false, lastX = 0, lastT = 0;
+        var onDown = function(e) { dragging = true; velocityRef.current = 0;
+          var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+          startX = cx; lastX = cx; lastT = performance.now(); startProg = targetRef.current; };
+        var onMove = function(e) { if (!dragging) return;
+          var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+          targetRef.current = startProg + (startX-cx)*(mobile ? 0.009 : 0.012); lastX = cx; lastT = performance.now(); };
+        var onUp = function(e) { if (!dragging) return; dragging = false;
+          var cx = e.clientX != null ? e.clientX : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : lastX);
+          var dt = performance.now() - lastT;
+          if (dt > 0 && dt < 100) velocityRef.current = (lastX - cx) / dt * (mobile ? 0.25 : 0.3); };
+        el.addEventListener("mousedown", onDown); window.addEventListener("mousemove", onMove); window.addEventListener("mouseup", onUp);
+        el.addEventListener("touchstart", onDown, { passive: true }); window.addEventListener("touchmove", onMove, { passive: true }); window.addEventListener("touchend", onUp, { passive: true });
+        return function() { el.removeEventListener("mousedown", onDown); window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp);
+          el.removeEventListener("touchstart", onDown); window.removeEventListener("touchmove", onMove); window.removeEventListener("touchend", onUp); };
+      }, [n, mobile]);
+
+      useEffect(function() {
+        var onMove = function(e) { mouseRef.current = { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }; };
+        window.addEventListener("mousemove", onMove);
+        return function() { window.removeEventListener("mousemove", onMove); };
+      }, []);
+
+      useEffect(function() {
+        if (!mobile) return;
+        var gyroActive = false;
+        var onOrientation = function(e) {
+          var gamma = e.gamma || 0;
+          var beta = e.beta || 0;
+          mouseRef.current = {
+            x: Math.max(0, Math.min(1, 0.5 + gamma / 60)),
+            y: Math.max(0, Math.min(1, 0.5 + (beta - 45) / 60))
+          };
+        };
+        var requestGyro = function() {
+          if (gyroActive) return;
+          if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+            DeviceOrientationEvent.requestPermission().then(function(state) {
+              if (state === "granted") { gyroActive = true; window.addEventListener("deviceorientation", onOrientation); }
+            });
+          } else {
+            gyroActive = true;
+            window.addEventListener("deviceorientation", onOrientation);
+          }
+        };
+        var el = stageRef.current;
+        if (el) el.addEventListener("touchstart", requestGyro, { once: true });
+        return function() {
+          if (el) el.removeEventListener("touchstart", requestGyro);
+          window.removeEventListener("deviceorientation", onOrientation);
+        };
+      }, [mobile]);
+
+      slotRefs.current = [];
+
+      return (
+        <div ref={stageRef} style={{ position: "fixed", inset: 0, background: "var(--bg)",
+          perspective: mobile ? "1200px" : "1800px", perspectiveOrigin: "50% 50%",
+          overflow: "hidden", userSelect: "none", touchAction: "none" }}>
+          <div ref={wrapperRef} style={{ position: "absolute", inset: 0,
+            WebkitTransformStyle: "preserve-3d", transformStyle: "preserve-3d",
+            transition: mobile ? "none" : "transform 0.5s cubic-bezier(.2,.7,.2,1)", pointerEvents: "none" }}>
+            {visible.map(function(idx) {
+              var item = items[idx];
+              var r = item.r || 1.5;
+              var itemH = Math.round(cardW / r);
+              return (
+                <div key={idx} data-idx={idx} ref={function(el) { if (el) slotRefs.current.push(el); }} className="gallery-card"
+                  style={{ position: "absolute", left: "50%", top: "50%", width: cardW, height: itemH,
+                    borderRadius: 20, overflow: "hidden",
+                    boxShadow: "0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04)",
+                    pointerEvents: "none", zIndex: 1000, opacity: 0 }}>
+                  {item.type === "video" ? (
+                    <video src={item.src} poster={item.src.replace(/\.mp4$/, "_poster.jpg")} autoPlay muted loop playsInline
+                      onContextMenu={function(e) { e.preventDefault(); }}
+                      controlsList="nodownload" disablePictureInPicture style={{
+                      width: "100%", height: "100%", objectFit: "cover",
+                      background: "var(--bg) url(" + item.src.replace(/\.mp4$/, "_poster.jpg") + ") center/cover no-repeat",
+                      transform: "translateZ(0)", WebkitBackfaceVisibility: "hidden" }} />
+                  ) : (
+                    <img src={item.src} alt={item.label || ""} draggable="false" loading="lazy"
+                      onContextMenu={function(e) { e.preventDefault(); }}
+                      style={{
+                      width: "100%", height: "100%", objectFit: "cover",
+                      transform: "translateZ(0)", userSelect: "none", WebkitUserDrag: "none", WebkitBackfaceVisibility: "hidden" }} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ position: "absolute", left: "50%", bottom: mobile ? 48 : 64,
+            transform: "translateX(-50%)", textAlign: "center",
+            pointerEvents: "none", maxWidth: "90vw", width: "100%", padding: "0 16px", zIndex: 11 }}>
+            <h1 ref={bannerTitleRef} style={{ fontWeight: 400,
+              fontSize: mobile ? 14 : 16, lineHeight: 1.55, letterSpacing: "-0.01em",
+              margin: 0, color: "var(--fg)",
+              animation: "rise 0.55s cubic-bezier(.2,.7,.2,1)" }}>{cardLabel(items[((startIdx % n) + n) % n])}</h1>
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== PROJECT DETAIL ===================== */
+    function ProjectDetail({ project, allProjects, onBack, onNext, onNav }) {
+      var stM = useState(false); var mounted = stM[0], setMounted = stM[1];
+      var mobile = isMobile();
+      useEffect(function() { var t = setTimeout(function() { setMounted(true); }, 30); return function() { clearTimeout(t); }; }, []);
+      var nextIdx = (allProjects.findIndex(function(p) { return p.id === project.id; }) + 1) % allProjects.length;
+      var next = allProjects[nextIdx];
+      var hasImgHero = project.content && project.content.length > 0 && project.content[0].type === "img";
+      var heroSrc = hasImgHero ? project.content[0].src : project.cover;
+      var contentItems = project.content ? (hasImgHero ? project.content.slice(1) : project.content) : [];
+
+      return (
+        <SmoothScroll scrollKey={project.id}>
+          <div style={{ position: "relative" }}>
+            <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: mobile ? 100 : 140, zIndex: 40,
+              pointerEvents: "none",
+              background: "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0) 100%)",
+              WebkitBackdropFilter: "blur(12px)", backdropFilter: "blur(12px)",
+              WebkitMaskImage: "linear-gradient(180deg, black 0%, black 30%, transparent 100%)",
+              maskImage: "linear-gradient(180deg, black 0%, black 30%, transparent 100%)" }} />
+            <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: mobile ? 80 : 120, zIndex: 40,
+              pointerEvents: "none",
+              background: "linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0) 100%)",
+              WebkitBackdropFilter: "blur(12px)", backdropFilter: "blur(12px)",
+              WebkitMaskImage: "linear-gradient(0deg, black 0%, black 30%, transparent 100%)",
+              maskImage: "linear-gradient(0deg, black 0%, black 30%, transparent 100%)" }} />
+
+            <div style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.5s", animation: "slideIn 0.6s cubic-bezier(.2,.7,.2,1)" }}>
+              <section style={{ position: "relative", width: "100%", overflow: "hidden",
+                padding: mobile ? "80px 20px 40px" : "100px 32px 60px" }}>
+                {heroSrc.endsWith(".mp4") ? (
+                  <video src={heroSrc} autoPlay muted loop playsInline style={{
+                    width: "100%", maxWidth: 1200, display: "block", margin: "0 auto", objectFit: "contain",
+                    aspectRatio: "16/10", background: "var(--line)" }} />
+                ) : (
+                  <img src={heroSrc} alt={project.title} style={{
+                    width: "100%", maxWidth: 1200, display: "block", margin: "0 auto", objectFit: "contain",
+                    aspectRatio: "16/10", background: "var(--line)",
+                    transform: mounted ? "scale(1) translateZ(0)" : "scale(1.02) translateZ(0)",
+                    transition: "transform 1.2s cubic-bezier(.2,.7,.2,1)", WebkitBackfaceVisibility: "hidden" }} />
+                )}
+              </section>
+
+              <section style={{ maxWidth: 640, margin: "0 auto", padding: mobile ? "32px 20px" : "48px 32px", textAlign: "center" }}>
+                <h1 style={{ fontWeight: 400, fontSize: mobile ? 14 : 16,
+                  lineHeight: 1.55, letterSpacing: "-0.01em", margin: "0 0 20px", color: "var(--fg)" }}>{project.displayTitle || project.title}</h1>
+                <div style={{ fontSize: 11, fontWeight: 400, lineHeight: 1.6, letterSpacing: "-0.01em",
+                  color: "var(--fg-dim)", margin: "0 0 24px" }}>
+                  {project.client} — {project.year}<br/>{project.role}
+                </div>
+                <p style={{ fontWeight: 400, fontSize: mobile ? 13 : 14, lineHeight: 1.6, letterSpacing: "-0.01em",
+                  color: "var(--fg)", margin: 0 }}>{project.blurb}</p>
+              </section>
+
+              {contentItems.length > 0 && (
+                <section style={{ padding: mobile ? "20px 20px 80px" : "40px 32px 120px", maxWidth: 1200, margin: "0 auto" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: mobile ? 40 : 64 }}>
+                    {contentItems.map(function(item, idx) {
+                      if (item.type === "video") {
+                        return (
+                          <video key={idx} src={item.src} autoPlay muted loop playsInline style={{
+                            width: "100%", display: "block", objectFit: "contain", aspectRatio: "16/10", background: "var(--line)" }} />
+                        );
+                      }
+                      return (
+                        <img key={idx} src={item.src} alt={project.title + " " + (idx + 2)} loading="lazy" style={{
+                          width: "100%", display: "block", objectFit: "contain", aspectRatio: "16/10", background: "var(--line)" }} />
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
+
+              <section onClick={function() { onNext(next); }} style={{
+                position: "relative", height: mobile ? "50vh" : "70vh", cursor: "pointer", overflow: "hidden",
+                borderTop: "1px solid var(--line)" }}>
+                <div style={{ position: "absolute", inset: 0, background: coverBg(next), filter: "brightness(0.85)" }}/>
+                <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", textAlign: "center", color: "#fff" }}>
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 400, letterSpacing: "-0.01em", opacity: 0.85,
+                      marginBottom: mobile ? 12 : 20, textShadow: "0 1px 12px rgba(0,0,0,0.3)" }}>Next</div>
+                    <div style={{ fontWeight: 400, fontSize: mobile ? 14 : 16,
+                      lineHeight: 1.55, letterSpacing: "-0.01em", textShadow: "0 2px 40px rgba(0,0,0,0.25)" }}>{next.displayTitle || next.title}</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </SmoothScroll>
+      );
+    }
+
+    /* ===================== NAV ===================== */
+    function Nav({ onNav, page }) {
+      var mobile = isMobile();
+      return (
+        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+          padding: mobile ? "20px 16px" : "24px 32px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          pointerEvents: "none",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%)",
+          backdropFilter: "blur(15px)", WebkitBackdropFilter: "blur(15px)",
+          WebkitMaskImage: "linear-gradient(180deg, black 0%, black 40%, transparent 100%)",
+          maskImage: "linear-gradient(180deg, black 0%, black 40%, transparent 100%)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: mobile ? 16 : 24, pointerEvents: "auto",
+            fontSize: mobile ? 11 : 12, fontWeight: 500, color: "var(--fg)", letterSpacing: "-0.01em" }}>
+            <NavLink active={page === "works"} label="Work" onClick={function() { onNav("works"); }} />
+            <NavLink active={page === "studio"} label="Studio" onClick={function() { onNav("studio"); }} />
+            <NavLink active={page === "contact"} label="Contact" onClick={function() { onNav("contact"); }} />
+          </div>
+        </nav>
+      );
+    }
+
+    function NavLink({ label, href, active, onClick }) {
+      var st = useState(false); var hover = st[0], setHover = st[1];
+      return (
+        <a href={href || ("/" + label.toLowerCase())} onClick={function(e) { e.preventDefault(); onClick && onClick(); }}
+          onMouseEnter={function() { setHover(true); }} onMouseLeave={function() { setHover(false); }}
+          style={{ color: active || hover ? "var(--fg)" : "var(--fg-dim)", textDecoration: active ? "underline" : "none",
+            textUnderlineOffset: "4px", transition: "color 0.2s" }}>{label}</a>
+      );
+    }
+
+    /* ===================== STUDIO PAGE ===================== */
+    function StudioPage() {
+      var mobile = isMobile();
+      return (
+        <div style={{ position: "fixed", inset: 0, background: "var(--bg)", zIndex: 5,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          animation: "slideIn 0.6s cubic-bezier(.2,.7,.2,1)" }}>
+          <div style={{ maxWidth: 560, width: "100%", padding: mobile ? "0 20px" : "0 40px", textAlign: "center" }}>
+            <p style={{ fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg)", margin: 0 }}>
+              Studio Subtract.
+            </p>
+            <p style={{ fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg)", margin: "1.2em 0 0" }}>
+              An artist-led studio working in subtraction.<br />We remove everything that isn't essential.
+            </p>
+            <p style={{ fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg-dim)", margin: "1.2em 0 0" }}>
+              Founded by James Jefferys.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== CONTACT PAGE ===================== */
+    function ContactPage() {
+      var mobile = isMobile();
+      return (
+        <div style={{ position: "fixed", inset: 0, background: "var(--bg)", zIndex: 5,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          animation: "slideIn 0.6s cubic-bezier(.2,.7,.2,1)" }}>
+          <div style={{ maxWidth: 560, width: "100%", padding: mobile ? "0 20px" : "0 40px", textAlign: "center" }}>
+            <a href="mailto:inbox@studiosubtract.com" style={{
+              fontSize: mobile ? 14 : 16, fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em",
+              color: "var(--fg)", textDecoration: "underline", textUnderlineOffset: "3px",
+              textDecorationColor: "var(--line)", transition: "text-decoration-color 0.2s"
+            }} onMouseEnter={function(e) { e.currentTarget.style.textDecorationColor = "var(--fg)"; }}
+               onMouseLeave={function(e) { e.currentTarget.style.textDecorationColor = "var(--line)"; }}>inbox@studiosubtract.com</a>
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== INTRO OVERLAY ===================== */
+    function IntroOverlay({ onDone }) {
+      var stH = useState(false); var hidden = stH[0], setHidden = stH[1];
+      var stLoaded = useState(false); var loaded = stLoaded[0], setLoaded = stLoaded[1];
+      var stProgress = useState(0); var progress = stProgress[0], setProgress = stProgress[1];
+      var smoothProgress = useRef(0);
+      var barRef = useRef(null);
+      var circleRef = useRef(null);
+      var rafRef = useRef(null);
+
+      useEffect(function() {
+        var items = window.GALLERY_ITEMS || [];
+        var srcs = items.filter(function(it) { return it.type === "img"; }).map(function(it) { return it.src; });
+        var posterSrcs = items.filter(function(it) { return it.type === "video"; }).map(function(it) { return it.src.replace(/\.mp4$/, "_poster.jpg"); });
+        var allSrcs = srcs.concat(posterSrcs);
+        var total = Math.max(allSrcs.length, 1);
+        var count = 0;
+        allSrcs.forEach(function(src) {
+          var img = new Image();
+          img.onload = img.onerror = function() {
+            count++;
+            setProgress(count / total);
+            if (count >= total) setLoaded(true);
+          };
+          img.src = src;
+        });
+        if (allSrcs.length === 0) { setLoaded(true); setProgress(1); }
+        var fallback = setTimeout(function() { setLoaded(true); setProgress(1); }, 8000);
+        return function() { clearTimeout(fallback); };
+      }, []);
+
+      useEffect(function() {
+        var tick = function() {
+          smoothProgress.current += (progress - smoothProgress.current) * 0.06;
+          if (Math.abs(progress - smoothProgress.current) < 0.001) smoothProgress.current = progress;
+          if (barRef.current) barRef.current.style.transform = "scaleX(" + smoothProgress.current + ")";
+          rafRef.current = requestAnimationFrame(tick);
+        };
+        rafRef.current = requestAnimationFrame(tick);
+        return function() { cancelAnimationFrame(rafRef.current); };
+      }, [progress]);
+
+      useEffect(function() {
+        if (!loaded) return;
+        var t = setTimeout(function() { setHidden(true); onDone && onDone(); }, 600);
+        return function() { clearTimeout(t); };
+      }, [loaded]);
+
+      return (
+        <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "var(--bg)",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          transition: "opacity 1.2s cubic-bezier(.4,0,.2,1)",
+          opacity: hidden ? 0 : 1,
+          pointerEvents: hidden ? "none" : "auto" }}>
+          <div style={{ position: "relative", width: 48, height: 48, marginBottom: 32 }}>
+            <svg width="48" height="48" viewBox="0 0 48 48" style={{ position: "absolute", inset: 0 }}>
+              <circle cx="24" cy="24" r="20" fill="none" stroke="var(--line)" strokeWidth="1.5" />
+              <circle cx="24" cy="24" r="20" fill="none" stroke="var(--fg)" strokeWidth="1.5"
+                strokeDasharray={String(125.66)} strokeDashoffset={String(125.66 * (1 - progress))}
+                strokeLinecap="round"
+                style={{ transform: "rotate(-90deg)", transformOrigin: "center",
+                  transition: "stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)" }} />
+            </svg>
+          </div>
+          <div style={{ width: 120, height: 1, background: "var(--line)", borderRadius: 1, overflow: "hidden" }}>
+            <div ref={barRef} style={{ width: "100%", height: "100%", background: "var(--fg)",
+              transformOrigin: "left center", transform: "scaleX(0)" }} />
+          </div>
+        </div>
+      );
+    }
+
+    /* ===================== APP ===================== */
+    function App() {
+      var route = useRoute();
+      var stI = useState(false); var introDone = stI[0], setIntroDone = stI[1];
+
+      useEffect(function() {
+        if (route.page !== "works" || route.slug) setIntroDone(true);
+      }, []);
+
+      var handleNav = function(p) { navigate("/" + p); };
+
+      useEffect(function() {
+        if (route.page === "studio") document.title = "Studio - Studio Subtract";
+        else if (route.page === "contact") document.title = "Contact - Studio Subtract";
+        else document.title = "Studio Subtract";
+      }, [route]);
+
+      return (
+        <>
+          {!introDone && <IntroOverlay onDone={function() { setIntroDone(true); }} />}
+          <Nav onNav={handleNav} page={route.page} />
+          {route.page === "works" && <Gallery items={window.GALLERY_ITEMS} />}
+          {route.page === "studio" && <StudioPage />}
+          {route.page === "contact" && <ContactPage />}
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
