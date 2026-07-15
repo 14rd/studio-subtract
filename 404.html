@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+<head>
+<script>
+  var path = window.location.pathname;
+  var search = window.location.search;
+  var hash = window.location.hash;
+  window.location.replace('/' + '?route=' + encodeURIComponent(path + search + hash));
+</script>
+</head>
+</html>
