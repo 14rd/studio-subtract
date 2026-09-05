@@ -292,8 +292,11 @@
 
     function Gallery({ items, introDone }) {
       var n = items.length;
-      var startIdx = window._galleryProgress != null ? Math.round(window._galleryProgress) : 25;
-      if (startIdx < 0 || startIdx >= items.length) startIdx = 25;
+      // default to the "Soft Surface Interface" video, wherever it sits after an Are.na sync
+      var defaultIdx = items.findIndex(function(it) { return it.label === "Soft Surface Interface"; });
+      if (defaultIdx < 0) defaultIdx = 0;
+      var startIdx = window._galleryProgress != null ? Math.round(window._galleryProgress) : defaultIdx;
+      if (startIdx < 0 || startIdx >= items.length) startIdx = defaultIdx;
       var progressRef = useRef(startIdx), targetRef = useRef(startIdx), velocityRef = useRef(0);
       var mouseRef = useRef({ x: 0.5, y: 0.5 });
       var rafRef = useRef(null), stageRef = useRef(null), wrapperRef = useRef(null);
